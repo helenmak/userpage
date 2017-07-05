@@ -55,6 +55,11 @@ Auth.statics.findOrCreate = function (profile, token, cb) {
 		'data.id': profile.id,
 		provider: profile.provider
 	}
+
+	if (!profile.emails) {
+		return cb(new Error('no email provided'), null)
+	}
+
 	this.findOne(query).exec()
 		.then(authData => {
 			if (authData) {
@@ -119,8 +124,8 @@ Auth.statics.registerLocal = function (userData, cb) {
 			})
 		})
 	}).then(authData => authData.save())
-	.then(authData => cb(null, authData))
-	.catch(err => cb(err));
+		.then(authData => cb(null, authData))
+		.catch(err => cb(err));
 }
 
 Auth.statics.authenticateLocal = function () {
