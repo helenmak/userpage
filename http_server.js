@@ -41,6 +41,7 @@ app.once('restapp_wssready', () => {
 	app.use('/', require('routes/index'));
 	app.use('/api', require('routes/api'));
 	app.use('/auth', require('routes/auth'));
+	app.use('/save_user_data', require('routes/saveUserData'));
 
 	// restricted access
 	app.use('/users', require('routes/users'));

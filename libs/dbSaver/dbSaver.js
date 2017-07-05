@@ -2,7 +2,7 @@ const arrFn = [];
 
 const dbSaver = (saverFunc)=>{
     arrFn.push({
-        last_update: null,
+        last_update: 0,
         saverFunc
     });
 };
@@ -23,7 +23,7 @@ const toInterval = ()=>{
             }
         }
     }).catch((err)=>{
-        console.log(`Error in dbSaver: ${err}`);
+        console.log(`Error in dbSaver, can't save data: ${err}`);
     })
 };
 

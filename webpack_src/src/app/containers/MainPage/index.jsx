@@ -6,6 +6,7 @@ import Header from 'app/components/Header';
 import SideMenu from 'app/components/SideMenu';
 import OfflineNotifier from 'app/components/OfflineNotifier';
 import ImgList from 'app/components/ImgList';
+import UserEditorForm from 'app/components/UserProfileEditor';
 
 import style from './style.scss';
 
@@ -56,8 +57,11 @@ class MainPage extends React.Component {
 					<div className={style.sidemenu}>
 						<SideMenu/>
 					</div>
-					<div className={style.content}>
-						<ImgList/>
+					{/*<div className={style.content}>*/}
+						{/*<ImgList/>*/}
+					{/*</div>*/}
+					<div>
+						<UserEditorForm/>
 					</div>
 				</div>
 				<OfflineNotifier />

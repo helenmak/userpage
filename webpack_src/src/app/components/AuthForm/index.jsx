@@ -24,7 +24,7 @@ const doLocalAuth = (values, dispatch, props) => {
 		credentials: 'include',
 		method: 'POST',
 		headers: myHeaders,
-		body: JSON.stringify(values)
+		body: JSON.stringify(q)
 	}
 
 	return fetch('/auth/local', requestOptions)

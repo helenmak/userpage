@@ -1,0 +1,40 @@
+$input-width: 300px;
+$color: rgb(117, 117, 117);
+
+.form {
+  margin-left: 40px;
+}
+
+h2, h4 {
+  font-family: Helvetica, Arial, sans-serif
+}
+
+input {
+  display: block;
+  width: $input-width;
+  font-size: 20px;
+  padding: 5px 10px 4px 10px;
+  border: 1px solid $color;
+  background-color: rgba(117, 117, 117, 0.1);
+  border-radius: 3px;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+  margin-top: -10px;
+}
+
+/*input[type=button] {
+  display: inline-block;
+  width: auto;
+  margin-left: 10px;
+}
+
+input[type=tel] {
+  display: inline-block;
+}*/
+
+input[type=submit] {
+  width: $input-width/2;
+  margin-top: 50px;
+  //color: rgb(117, 117, 117);
+  background-color: rgb(255, 255, 255);
+}

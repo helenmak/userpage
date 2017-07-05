@@ -53,7 +53,7 @@ const UserSchema = {
 		default: Date.now
 	},
 
-}
+};
 
 const User = new Schema(UserSchema);
 
