@@ -15,20 +15,22 @@ const authmw = require('./authmw');
 passport.use(new LinkedInStrategy({
 	consumerKey: config.get('auth:linkedinAuth:clientID'),
 	consumerSecret: config.get('auth:linkedinAuth:clientSecret'),
-	callbackURL: config.get('rootURL') + ':' + config.get('callbackPort') + config.get('auth:linkedinAuth:callbackURL')
+	callbackURL: config.get('rootURL') + ':' + config.get('callbackPort') + config.get('auth:linkedinAuth:callbackURL'),
+	profileFields: ['id', 'first-name', 'last-name', 'email-address', 'headline']
 },
 	function (token, tokenSecret, profile, done) {
 		profile.username = profile.displayName;
 		profile.token = token;
-		authModel.findOrCreate(profile, token, (err,  user ) => {
+		console.log(profile);
+		authModel.findOrCreate(profile, token, (err, data) => {
 			if (err) { return done(err, null) }
-			return done(null, { user });
+			return done(null, data.user);
 		});
 	}
 ));
 
 //Linkedin auth handler
-router.get('/', passport.authenticate('linkedin'));
+router.get('/', passport.authenticate('linkedin', { scope: ['r_basicprofile', 'r_emailaddress'] }));
 
 router.get('/callback', (req, res, next) => {
 	passport.authenticate('linkedin', authmw(req, res, next))(req, res, next);
