@@ -9,7 +9,7 @@ const fb = require('./fb');
 const vk = require('./vk');
 const linkid = require('./linkid');
 const logout = require('./logout');
-const postauth = require('./postauth')
+const confirm = require('./confirm')
 const passport = require('passport');
 const userModel = require('models/user');
 
@@ -28,7 +28,7 @@ router.use('/linkid', linkid)
 router.use('/fb', fb);
 router.use('/vk', vk);
 router.use('/logout', logout);
-router.use('/postauth', postauth);
+router.use('/confirm', confirm);
 
 
 router.get('/', function (req, res) {
