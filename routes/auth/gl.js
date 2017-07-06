@@ -15,9 +15,9 @@ passport.use(new GoogleStrategy({
 	function (accessToken, refreshToken, profile, done) {
 		profile.username = profile.displayName;
 		profile.token = accessToken;
-		authModel.findOrCreate(profile, accessToken, (err, { user }) => { //only user needed here
+		authModel.findOrCreate(profile, accessToken, (err, data) => {
 			if (err) { return done(err, null) }
-			return done(null, user);
+			return done(null, data.user);
 		});
 	}
 ));
