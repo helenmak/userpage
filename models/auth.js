@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const passportLocalMongoose = require('passport-local-mongoose');
 const userModel = require('models/user');
+const crypto = require('crypto');
 
 const AuthSchema = {
 
@@ -13,6 +14,11 @@ const AuthSchema = {
 	, provider: Schema.Types.String
 	, data: Schema.Types.Mixed
 	, token: Schema.Types.String
+	, confirmed: Schema.Types.Boolean
+	, confirmation: {
+		secret: Schema.Types.String
+		, timestamp: Schema.Types.Date
+	}
 }
 
 const Auth = new Schema(AuthSchema);
@@ -37,8 +43,17 @@ Auth.statics.addAuthRecord = function (user, profile, token) {
 		, data: profile._json
 		, token: token || null
 	})
+	if (profile.provider == "local") {
+		authRecord.confirmed = false;
+		authRecord.confirmation.secret = crypto.randomBytes(13).toString('HEX');
+		authRecord.confirmation.timestamp = Date.now();
+	} else {
+		authRecord.confirmed = true;
+	}
+
 	return Promise.all([user.updateAuthRef(authRecord._id), authRecord.save()])
 		.then(savedDocs => { return { user: savedDocs[0], authRecord: savedDocs[1] } })
+		.catch((err) => console.log(err));
 }
 
 Auth.statics.findAuthRecord = function (user, provider) {
@@ -58,12 +73,16 @@ Auth.statics.findOrCreate = function (profile, token, cb) {
 	this.findOne(query).exec()
 		.then(authData => {
 			if (authData) {
-				return userModel
-					.findById(authData.user)
-					.exec()
-					.then(user => cb(null, {
-						user: user, authRecord: authData
-					}));
+				if (authData.confirmed) {
+					return userModel
+						.findById(authData.user)
+						.exec()
+						.then(user => cb(null, {
+							user: user, authRecord: authData
+						}));
+				} else {
+					return cb(new Error('account not confirmed!', null))
+				}
 			}
 			return userModel
 				.findByEmail(profile.emails[0].value)
@@ -119,8 +138,8 @@ Auth.statics.registerLocal = function (userData, cb) {
 			})
 		})
 	}).then(authData => authData.save())
-	.then(authData => cb(null, authData))
-	.catch(err => cb(err));
+		.then(authData => cb(null, authData))
+		.catch(err => cb(err));
 }
 
 Auth.statics.authenticateLocal = function () {
@@ -132,7 +151,7 @@ Auth.statics.authenticateLocal = function () {
 		}
 		//populate only with LOCAL auth records
 		userModel.findOne(query)
-			.populate('auth', 'user hash salt', { provider: { $eq: 'local' } })
+			.populate('auth', 'user hash salt confirmed', { provider: { $eq: 'local' } })
 			.exec()
 			.then(userToAuth => {
 				if (!userToAuth) {
@@ -157,6 +176,10 @@ Auth.statics.authenticateLocal = function () {
 				})
 			})
 			.then(verifiedAuthData => {
+				if (!verifiedAuthData.confirmed) throw new Error('Account not confirmed!');
+				return verifiedAuthData;
+			})
+			.then(verifiedAuthData => {
 				let query = { _id: verifiedAuthData.user }
 				return userModel.findOne(query).exec()
 			})
@@ -176,5 +199,21 @@ Auth.statics.authenticateLocal = function () {
 			});
 	}
 }
+
+Auth.statics.confirmAccount = function(secret) {
+	let record = this.findOne({ 'confirmation.secret': secret })
+		.then ( (authRecord) => {
+			if (authRecord) {
+				authRecord.confirmed = true;
+				authRecord.save();
+				console.log('confirming..',authRecord._id);
+			}
+		})
+		.catch((err) => {
+			console.log(err);
+		})
+}
+
+//{ provider: { $eq: 'local' } })
 
 module.exports = mongoose.model('Auth', Auth);
