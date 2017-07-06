@@ -52,5 +52,8 @@
 			"callbackURL": "/auth/fb/callback"
 
 		}
+	},
+	"sendInBlue": {
+		"apiKey": "6a3FMmLjhwTcDV9B"
 	}
 }
