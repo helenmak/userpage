@@ -73,7 +73,7 @@ Auth.statics.findOrCreate = function (profile, token, cb) {
 							email: profile.emails[0].value
 							, username: profile.username
 							, gender: profile.gender
-							, birthday: profile.birthday
+							, birthday: profile.birthday || profile._json.birthday
 							, auth: []
 						});
 					}
