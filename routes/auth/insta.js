@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-const userModel = require('models/user');
+const authModel = require('models/auth');
 
 const passport = require('passport');
 const InstagramStrategy = require('passport-instagram');
 const config = require('config');
+const authmw = require('./authmw');
 
 passport.use(new InstagramStrategy(
 	{
@@ -15,21 +16,22 @@ passport.use(new InstagramStrategy(
 	},
 
 	function (accessToken, refreshToken, profile, done) {
-
-		userModel.findOrCreate(profile, (err, user) => {
-			if (err) { return done(err); }
-			return done(null, user);
-	});
+		profile.username = profile.displayName;
+		profile.token = accessToken;
+		console.log(profile);
+		authModel.findOrCreate(profile, accessToken, (err, data) => {
+			if (err) { return done(err, null) }
+			return done(null, data.user);
+		});
 	}
 ));
 
 //Instagram auth handler
 router.get('/', passport.authenticate('instagram'));
 
-router.get('/callback', passport.authenticate('instagram', { failureRedirect: '/' }),
-	function (req, res) {
-		res.redirect('/auth/postauth');
-	});
+router.get('/callback', (req, res, next) => {
+	passport.authenticate('instagram', authmw(req, res, next))(req, res, next);
+});
 
 
 module.exports = router;

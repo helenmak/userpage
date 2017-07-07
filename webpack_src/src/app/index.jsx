@@ -2,16 +2,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import MainPage from 'app/containers/MainPage';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import socket from 'app/util/websockets';
+import socket from 'app/ws_client';
+import { BrowserRouter } from 'react-router-dom'
 
 import 'font-awesome/css/font-awesome.css';
 import './main.scss';
+import 'normalize.css/normalize.css'
 
 import { Provider } from 'react-redux';
 import store from './store';
 
-//Touch support for material-ui
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
@@ -33,11 +33,10 @@ function getRandomInt(min, max) {
 
 
 ReactDOM.render (
+	<BrowserRouter>
 	<Provider store={store}>
-	<MuiThemeProvider>
 		<MainPage />
-	</MuiThemeProvider>
 	</Provider>
-
+	</BrowserRouter>
 	, document.querySelector('#rm-root')
 );

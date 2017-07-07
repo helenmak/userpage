@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const reviewModel = require('models/review');
- 
+
 
 const UserSchema = {
 	// _id will be created by Mongo
@@ -42,6 +42,10 @@ const UserSchema = {
 	gender: {
 		type: Schema.Types.String
 	},
+
+	phones: [{
+		type: Schema.Types.String
+	}],
 
 	createTime: {
 		type: Schema.Types.Date,
