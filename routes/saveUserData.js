@@ -4,13 +4,13 @@ const router = express.Router();
 
 router.post('/', function (req, res) {
     console.log(req.body);
-
-    if(users[req.body.id]){
-        if(req.body.username) users[req.body.id].username = req.body.username;
-        if(req.body.birthday) users[req.body.id].birthday = req.body.birthday;
-        if(req.body.phone) users[req.body.id].phone = req.body.phone;
+    for( let key in req.body) {
+        if(key !== 'id' && users[req.body.id]) {
+            users[req.body.id][key] = req.body[key];
+            users[req.body.id].modifyTime = req.body.modifyTime;
+        }
     }
-
+    res.send('Data will be saved')
 });
 
 module.exports = router;

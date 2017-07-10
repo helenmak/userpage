@@ -57,11 +57,8 @@ class MainPage extends React.Component {
 					<div className={style.sidemenu}>
 						<SideMenu/>
 					</div>
-					{/*<div className={style.content}>*/}
-						{/*<ImgList/>*/}
-					{/*</div>*/}
-					<div>
-						<UserEditorForm/>
+					<div className={style.content}>
+						<ImgList/>
 					</div>
 				</div>
 				<OfflineNotifier />
