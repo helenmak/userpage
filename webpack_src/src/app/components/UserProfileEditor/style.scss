@@ -5,7 +5,7 @@ $color: rgb(117, 117, 117);
   margin-left: 40px;
 }
 
-h2, h4 {
+h2, h3, h4 {
   font-family: Helvetica, Arial, sans-serif
 }
 
@@ -27,4 +27,18 @@ input[type=submit] {
   margin-top: 50px;
   //color: rgb(117, 117, 117);
   background-color: rgb(255, 255, 255);
+}
+
+.showMsg {
+  background-color: rgb(255, 255, 255);
+  padding: 5px 10px 4px 10px;
+  border: 1px solid $color;
+  border-radius: 3px;
+  box-sizing: border-box;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.hideMsg {
+  display: none;
 }

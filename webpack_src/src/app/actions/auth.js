@@ -45,10 +45,3 @@ export const authFullLogout = () => {
 		.catch();
 	}
 }
-
-export const changeUserData = (user)=>{
-	return {
-		type: 'CHANGE_USERDATA',
-		payload: user
-	}
-}

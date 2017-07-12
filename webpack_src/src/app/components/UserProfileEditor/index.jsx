@@ -1,9 +1,10 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as authActions from 'app/actions/auth'
+import * as userActions from 'app/actions/userEdit';
 
 import style from './style.scss';
+import Message from './message.jsx'
 
 class UserEditorForm extends React.Component {
 	constructor(props){
@@ -61,26 +62,38 @@ class UserEditorForm extends React.Component {
 
 	handleChange(event){
 		let name = event.target.id;
-	 	this.setState({[name]: event.target.value, id: this.props.userId, modifyTime: new Date});
+	 	this.setState({[name]: event.target.value, uid: this.props.userId, modifyTime: new Date});
 	}
 
 	handleSubmit(event){
 		event.preventDefault();
 		//console.log(this.state);
+		let self = this;
 		const { changeUserData } = this.props.actions;
 		changeUserData(this.state);
 		let options = { method: 'POST',
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify(this.state) };
 		fetch('/save_user_data', options)
-			 .then((response)=> console.log(response))
-				 //response.json)
-
+			.then(function(res) {
+				res.text()
+					.then(function (data) {
+					const { showMsg, hideMsg } = self.props.actions;
+					showMsg(data);
+					setTimeout(function(){hideMsg('')}, 1000)
+				});
+			})
+			.catch((err)=>{
+				const { showMsg, hideMsg } = self.props.actions;
+				showMsg('Error occured when trying to save data');
+				setTimeout(function(){hideMsg('')}, 1000)
+			})
 	}
 
-	render() {
+	render(){
 		return (
 			<form name ='profileEditor' className={style.form} onSubmit={this.handleSubmit}>
+				<div><Message /></div>
 				{this.renderFields()}
 			</form>
 		)
@@ -96,7 +109,7 @@ const mapStateToProps = (state)=>{ //from reducers
 };
 
 const mapDispatchtoProps = (dispatch)=>{//change user data in store
-	return { actions: bindActionCreators(authActions, dispatch) }
+	return { actions: bindActionCreators(userActions, dispatch) }
 };
 
 export default connect(mapStateToProps, mapDispatchtoProps)(UserEditorForm);

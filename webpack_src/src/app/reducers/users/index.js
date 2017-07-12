@@ -9,7 +9,7 @@ const reducer = (state = initialState, action) => {
 	switch (_action.type) {
 		case 'CHANGE_USERDATA':
 			for (let key in _action.payload) {
-				_state[_action.payload.id][key] = _action.payload[key]
+				_state[_action.payload.uid][key] = _action.payload[key]
 			}
 			break;
 		case 'AUTH_SUCCESS':

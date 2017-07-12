@@ -6,12 +6,12 @@ const app = require('http_server');
 router.post('/', function (req, res) {
     console.log(req.body);
     for( let key in req.body) {
-        if(key !== 'id' && users[req.body.id]) {
-            users[req.body.id][key] = req.body[key];
+        if(key !== 'uid' && users[req.body.uid]) {
+            users[req.body.uid][key] = req.body[key];
         }
     }
 
-    res.send()
+    res.send('data saved')
 });
 
 app.on('userdata_not_saved', (err)=>{
